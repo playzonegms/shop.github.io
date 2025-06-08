@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanFlex - Street Culture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #ff6b35;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: #ff6b35;
+            transform: translateY(-2px);
+        }
+
+        .cart-btn {
+            background: #ff6b35;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #fff;
+            color: #ff6b35;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            transition: left 0.3s ease;
+            z-index: 1001;
+            padding: 2rem;
+            border-right: 2px solid #ff6b35;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .category-title {
+            color: #ff6b35;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .category-item {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+            transition: color 0.3s ease;
+        }
+
+        .category-item:hover {
+            color: #ff6b35;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><polygon fill="%23ff6b35" points="0,300 300,0 600,300 900,0 1200,300 1200,600 0,600"/></svg>');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            background: #ff6b35;
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .cta-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Products Section */
+        .products-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #ff6b35;
+            text-transform: uppercase;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #ff6b35, #e55a2b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #fff;
+            position: relative;
+        }
+
+        .sale-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .product-brand {
+            color: #ff6b35;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .current-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .original-price {
+            font-size: 1rem;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #ff6b35;
+            color: #fff;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #e55a2b;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-modal {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 400px;
+            border: 2px solid #ff6b35;
+        }
+
+        .auth-title {
+            text-align: center;
+            color: #ff6b35;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: #ff6b35;
+            color: #fff;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .close-auth {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .footer-section a {
+            color: #999;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            color: #999;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">UrbanFlex</div>
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item" onclick="showAuth('login')">Iniciar Sesión</a>
+                <a href="#" class="nav-item" onclick="showAuth('register')">Crear Cuenta</a>
+                <button class="cart-btn" onclick="toggleCart()">
+                    Carrito
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menú</h3>
+            <button class="close-sidebar" onclick="closeSidebar()">×</button>
+        </div>
+        <div class="category-title">Categorías</div>
+        <a href="#" class="category-item">Camisetas</a>
+        <a href="#" class="category-item">Hoodies</a>
+        <a href="#" class="category-item">Gorras</a>
+        <a href="#" class="category-item">Sneakers</a>
+        <a href="#" class="category-item">Pantalones</a>
+        <a href="#" class="category-item">Accesorios</a>
+        <a href="#" class="category-item">Ofertas</a>
+    </aside>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Street Culture</h1>
+            <p>Descubre el estilo urbano que define tu personalidad</p>
+            <button class="cta-btn" onclick="scrollToProducts()">Explorar Colección</button>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section" id="products">
+        <h2 class="section-title">Productos Destacados</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- Los productos se cargan dinámicamente -->
+        </div>
+    </section>
+
+    <!-- Auth Modal -->
+    <div class="auth-section" id="authModal">
+        <div class="auth-modal">
+            <button class="close-auth" onclick="closeAuth()">×</button>
+            <h2 class="auth-title" id="authTitle">Iniciar Sesión</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Contraseña" required>
+                </div>
+                <div class="form-group" id="nameGroup" style="display: none;">
+                    <input type="text" placeholder="Nombre completo">
+                </div>
+                <button type="submit" class="auth-btn" id="authBtn">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>UrbanFlex</h3>
+                <p>Tu destino para la moda urbana más auténtica. Encuentra las mejores marcas y estilos street.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <a href="#">Inicio</a>
+                <a href="#">Productos</a>
+                <a href="#">Ofertas</a>
+                <a href="#">Contacto</a>
+            </div>
+            <div class="footer-section">
+                <h3>Atención al Cliente</h3>
+                <a href="#">FAQ</a>
+                <a href="#">Envíos</a>
+                <a href="#">Devoluciones</a>
+                <a href="#">Tallas</a>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">TikTok</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 UrbanFlex. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample products data
+        const products = [
+            {
+                id: 1,
+                name: "Air Jordan 1 Retro High",
+                brand: "Jordan",
+                price: 189.99,
+                originalPrice: 220.00,
+                onSale: true,
+                image: "👟"
+            },
+            {
+                id: 2,
+                name: "New Era 59FIFTY Cap",
+                brand: "New Era",
+                price: 39.99,
+                originalPrice: null,
+                onSale: false,
+                image: "🧢"
+            },
+            {
+                id: 3,
+                name: "Champion Reverse Weave Hoodie",
+                brand: "Champion",
+                price: 79.99,
+                originalPrice: 95.00,
+                onSale: true,
+                image: "👕"
+            },
+            {
+                id: 4,
+                name: "Nike Air Force 1 '07",
+                brand: "Nike",
+                price: 129.99,
+                originalPrice: null,
+                onSale: false,
+                image: "👟"
+            },
+            {
+                id: 5,
+                name: "Supreme Box Logo Tee",
+                brand: "Supreme",
+                price: 89.99,
+                originalPrice: 110.00,
+                onSale: true,
+                image: "👔"
+            },
+            {
+                id: 6,
+                name: "Adidas Originals Tracksuit",
+                brand: "Adidas",
+                price: 159.99,
+                originalPrice: null,
+                onSale: false,
+                image: "🏃"
+            }
+        ];
+
+        let cart = [];
+        let cartCount = 0;
+
+        // Load products
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.onSale ? '<div class="sale-badge">SALE</div>' : ''}
+                        ${product.image}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">${product.brand}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">
+                            <span class="current-price">$${product.price}</span>
+                            ${product.originalPrice ? `<span class="original-price">$${product.originalPrice}</span>` : ''}
+                        </div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cart functionality
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            cartCount++;
+            updateCartCount();
+            
+            // Simple notification
+            alert(`${product.name} agregado al carrito!`);
+        }
+
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cartCount;
+        }
+
+        function toggleCart() {
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            
+            let cartItems = cart.map(item => `${item.name} - $${item.price}`).join('\n');
+            let total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+            alert(`Carrito:\n${cartItems}\n\nTotal: $${total}`);
+        }
+
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Auth functionality
+        function showAuth(type) {
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('authTitle');
+            const btn = document.getElementById('authBtn');
+            const nameGroup = document.getElementById('nameGroup');
+            
+            if (type === 'login') {
+                title.textContent = 'Iniciar Sesión';
+                btn.textContent = 'Iniciar Sesión';
+                nameGroup.style.display = 'none';
+            } else {
+                title.textContent = 'Crear Cuenta';
+                btn.textContent = 'Crear Cuenta';
+                nameGroup.style.display = 'block';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeAuth() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function scrollToProducts() {
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event listeners
+        document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+        document.getElementById('overlay').addEventListener('click', closeSidebar);
+        
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Funcionalidad de autenticación simulada');
+            closeAuth();
+        });
+
+        // Initialize
+        loadProducts();
+    </script>
+</body>
+</html>
