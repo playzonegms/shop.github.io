@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nombre": "Producto A",
+    "precio": 12990,
+    "moneda": "CLP",
+    "imagen": "ruta/a/imagenA.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Producto B",
+    "precio": 24990,
+    "moneda": "CLP",
+    "imagen": "ruta/a/imagenB.jpg"
+  }
+]
