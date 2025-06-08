@@ -237,13 +237,19 @@
         .product-image {
             width: 100%;
             height: 250px;
-            background: linear-gradient(45deg, #ff6b35, #e55a2b);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #fff;
+            overflow: hidden;
             position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
         }
 
         .sale-badge {
@@ -320,7 +326,6 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
-            display: flex;
             align-items: center;
             justify-content: center;
         }
@@ -331,6 +336,7 @@
             border-radius: 15px;
             width: 400px;
             border: 2px solid #ff6b35;
+            position: relative;
         }
 
         .auth-title {
@@ -370,6 +376,43 @@
             margin-bottom: 1rem;
         }
 
+        .switch-auth {
+            text-align: center;
+            margin-top: 1rem;
+            color: #999;
+        }
+
+        .switch-auth a {
+            color: #ff6b35;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .switch-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .user-info {
+            display: none;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: #555;
+        }
+
+        /* Footer */
         .close-auth {
             position: absolute;
             top: 10px;
@@ -395,12 +438,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-        }
-
-        .footer-section h3 {
-            color: #ff6b35;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
         }
 
         .footer-section a {
@@ -466,8 +503,14 @@
             <div class="logo">UrbanFlex</div>
             <button class="menu-toggle" id="menuToggle">☰</button>
             <nav class="nav-menu">
-                <a href="#" class="nav-item" onclick="showAuth('login')">Iniciar Sesión</a>
-                <a href="#" class="nav-item" onclick="showAuth('register')">Crear Cuenta</a>
+                <div class="user-info" id="userInfo">
+                    <span id="userName"></span>
+                    <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+                </div>
+                <div id="authButtons">
+                    <a href="#" class="nav-item" onclick="showAuth('login')">Iniciar Sesión</a>
+                    <a href="#" class="nav-item" onclick="showAuth('register')">Crear Cuenta</a>
+                </div>
                 <button class="cart-btn" onclick="toggleCart()">
                     Carrito
                     <span class="cart-count" id="cartCount">0</span>
@@ -516,15 +559,18 @@
             <h2 class="auth-title" id="authTitle">Iniciar Sesión</h2>
             <form id="authForm">
                 <div class="form-group">
-                    <input type="email" placeholder="Email" required>
+                    <input type="email" id="authEmail" placeholder="Email" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" placeholder="Contraseña" required>
+                    <input type="password" id="authPassword" placeholder="Contraseña" required>
                 </div>
                 <div class="form-group" id="nameGroup" style="display: none;">
-                    <input type="text" placeholder="Nombre completo">
+                    <input type="text" id="authName" placeholder="Nombre completo">
                 </div>
                 <button type="submit" class="auth-btn" id="authBtn">Iniciar Sesión</button>
+                <div class="switch-auth" id="switchAuth">
+                    ¿No tienes cuenta? <a onclick="switchAuthMode()">Crear cuenta</a>
+                </div>
             </form>
         </div>
     </div>
@@ -573,7 +619,7 @@
                 price: 189.99,
                 originalPrice: 220.00,
                 onSale: true,
-                image: "👟"
+                image: "https://nikeclprod.vtexassets.com/arquivos/ids/1253142-380-380?v=638754208264100000&width=380&height=380&aspect=true"
             },
             {
                 id: 2,
@@ -582,7 +628,7 @@
                 price: 39.99,
                 originalPrice: null,
                 onSale: false,
-                image: "🧢"
+                image: "https://neweracap.co.th/cdn/shop/files/60494585_59FIFTY_FW24_TONAL-SCRIPT_BLK_3QL.png?v=1728028422&width=1080"
             },
             {
                 id: 3,
@@ -591,7 +637,7 @@
                 price: 79.99,
                 originalPrice: 95.00,
                 onSale: true,
-                image: "👕"
+                image: "https://images.squarespace-cdn.com/content/v1/6136ee30d6ef722b639dbca2/1639460797727-BF8VURWAUB191BY5W8Q2/Template+34_ccexpress.png?format=1500w"
             },
             {
                 id: 4,
@@ -600,7 +646,7 @@
                 price: 129.99,
                 originalPrice: null,
                 onSale: false,
-                image: "👟"
+                image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=300&fit=crop&auto=format"
             },
             {
                 id: 5,
@@ -609,7 +655,7 @@
                 price: 89.99,
                 originalPrice: 110.00,
                 onSale: true,
-                image: "👔"
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop&auto=format"
             },
             {
                 id: 6,
@@ -618,12 +664,101 @@
                 price: 159.99,
                 originalPrice: null,
                 onSale: false,
-                image: "🏃"
+                image: "https://images.unsplash.com/photo-1544966503-7cc5ac882d5c?w=400&h=300&fit=crop&auto=format"
             }
         ];
 
         let cart = [];
         let cartCount = 0;
+        let currentUser = null;
+        let currentAuthMode = 'login';
+
+        // User accounts storage (simulated JSON storage)
+        let userAccounts = [
+            // Example user for testing
+            {
+                id: 1,
+                name: "Usuario Demo",
+                email: "demo@urbanflex.com",
+                password: "123456"
+            }
+        ];
+
+        // Check if user is logged in on page load
+        function checkUserSession() {
+            const savedUser = localStorage.getItem('urbanflex_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showUserInfo();
+            }
+        }
+
+        function showUserInfo() {
+            document.getElementById('authButtons').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('userName').textContent = `Hola, ${currentUser.name}`;
+        }
+
+        function hideUserInfo() {
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('urbanflex_user');
+            hideUserInfo();
+            alert('Sesión cerrada correctamente');
+        }
+
+        function registerUser(name, email, password) {
+            // Check if user already exists
+            const existingUser = userAccounts.find(user => user.email === email);
+            if (existingUser) {
+                alert('Ya existe una cuenta con este email');
+                return false;
+            }
+
+            // Create new user
+            const newUser = {
+                id: userAccounts.length + 1,
+                name: name,
+                email: email,
+                password: password
+            };
+
+            userAccounts.push(newUser);
+            
+            // Save to localStorage (simulating JSON storage)
+            localStorage.setItem('urbanflex_accounts', JSON.stringify(userAccounts));
+            
+            alert('Cuenta creada exitosamente');
+            return true;
+        }
+
+        function loginUser(email, password) {
+            const user = userAccounts.find(user => user.email === email && user.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('urbanflex_user', JSON.stringify(user));
+                showUserInfo();
+                closeAuth();
+                alert(`Bienvenido, ${user.name}!`);
+                return true;
+            } else {
+                alert('Email o contraseña incorrectos');
+                return false;
+            }
+        }
+
+        function switchAuthMode() {
+            if (currentAuthMode === 'login') {
+                showAuth('register');
+            } else {
+                showAuth('login');
+            }
+        }
 
         // Load products
         function loadProducts() {
@@ -632,14 +767,14 @@
                 <div class="product-card">
                     <div class="product-image">
                         ${product.onSale ? '<div class="sale-badge">SALE</div>' : ''}
-                        ${product.image}
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
                     </div>
                     <div class="product-info">
                         <div class="product-brand">${product.brand}</div>
                         <div class="product-name">${product.name}</div>
                         <div class="product-price">
-                            <span class="current-price">$${product.price}</span>
-                            ${product.originalPrice ? `<span class="original-price">$${product.originalPrice}</span>` : ''}
+                            <span class="current-price">${product.price}</span>
+                            ${product.originalPrice ? `<span class="original-price">${product.originalPrice}</span>` : ''}
                         </div>
                         <button class="add-to-cart" onclick="addToCart(${product.id})">
                             Agregar al Carrito
@@ -696,15 +831,20 @@
             const title = document.getElementById('authTitle');
             const btn = document.getElementById('authBtn');
             const nameGroup = document.getElementById('nameGroup');
+            const switchAuth = document.getElementById('switchAuth');
+            
+            currentAuthMode = type;
             
             if (type === 'login') {
                 title.textContent = 'Iniciar Sesión';
                 btn.textContent = 'Iniciar Sesión';
                 nameGroup.style.display = 'none';
+                switchAuth.innerHTML = '¿No tienes cuenta? <a onclick="switchAuthMode()">Crear cuenta</a>';
             } else {
                 title.textContent = 'Crear Cuenta';
                 btn.textContent = 'Crear Cuenta';
                 nameGroup.style.display = 'block';
+                switchAuth.innerHTML = '¿Ya tienes cuenta? <a onclick="switchAuthMode()">Iniciar sesión</a>';
             }
             
             modal.style.display = 'flex';
@@ -712,6 +852,8 @@
 
         function closeAuth() {
             document.getElementById('authModal').style.display = 'none';
+            // Clear form
+            document.getElementById('authForm').reset();
         }
 
         function scrollToProducts() {
